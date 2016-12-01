@@ -1,0 +1,10 @@
+name: ItemRecipes
+version: ${project.version}
+main: me.ialistannen.itemrecipes.ItemRecipes
+depend: [PerceiveCore]
+authors: [I_Al_Istannen]
+description: Shows recipes for items
+commands:
+  itemrecipes:
+    usage: "/<command> item recipes"
+    description: "Shows all items and their recipes"
