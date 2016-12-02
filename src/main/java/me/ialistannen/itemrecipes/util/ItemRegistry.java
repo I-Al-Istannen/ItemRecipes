@@ -63,9 +63,8 @@ public enum ItemRegistry {
     public void build(Dimension dimension) {
         long start = System.currentTimeMillis();
         for (Recipe recipe : RecipeRegistry.INSTANCE.getAllRecipes()) {
-            ItemStack result = Util.normalize(recipe.getResult());
             ItemRecipeNode itemRecipeNode = new ItemRecipeNode(null, recipe, dimension);
-            nodeMap.put(result, itemRecipeNode);
+            addRecipeNode(itemRecipeNode);
         }
         long duration = System.currentTimeMillis() - start;
         System.out.println("ItemRegistry.build() Took: " + duration + " (" + TimeUnit.MILLISECONDS.toSeconds(duration) + ")");

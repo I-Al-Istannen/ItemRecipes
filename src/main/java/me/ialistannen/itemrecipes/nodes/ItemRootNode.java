@@ -1,7 +1,7 @@
 package me.ialistannen.itemrecipes.nodes;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.inventory.ItemStack;
 
@@ -20,7 +20,6 @@ import me.ialistannen.itemrecipes.util.ItemCategory;
  */
 public class ItemRootNode extends TreePaneNode {
 
-    private List<ItemCategoryNode> nodes = new ArrayList<>();
     private PagedPane pagedPane;
     private Dimension size;
 
@@ -36,16 +35,14 @@ public class ItemRootNode extends TreePaneNode {
 
         for (ItemCategory category : categories) {
             ItemCategoryNode itemCategoryNode = new ItemCategoryNode(this, category, size);
-            nodes.add(itemCategoryNode);
+            addChild(itemCategoryNode);
         }
     }
 
     private PagedPane createPane() {
         PagedPane pagedPane = new PagedPane(size.getWidth(), size.getHeight());
 
-        for (ItemCategoryNode node : nodes) {
-            getOwner().ifPresent(node::setOwner);
-
+        for (ItemCategoryNode node : getItemCategoryChildren()) {
             ItemStack icon = ItemFactory.builder(node.getCategory().getIcon())
                       .setName("&c&l" + TextUtils.enumFormat(node.getCategory().name(), true))
                       .build();
@@ -58,6 +55,17 @@ public class ItemRootNode extends TreePaneNode {
         }
 
         return pagedPane;
+    }
+
+    /**
+     * @return All children that are {@link ItemCategoryNode}s in a list
+     */
+    private List<ItemCategoryNode> getItemCategoryChildren() {
+        return getChildren().stream()
+                  .filter(treePaneNode -> treePaneNode instanceof ItemCategoryNode)
+                  .map(treePaneNode -> (ItemCategoryNode) treePaneNode)
+                  .collect(Collectors.toList());
+
     }
 
     /**

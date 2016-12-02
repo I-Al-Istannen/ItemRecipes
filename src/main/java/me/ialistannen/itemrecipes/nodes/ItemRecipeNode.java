@@ -51,7 +51,7 @@ public class ItemRecipeNode extends TreePaneNode {
     /**
      * @return The resulting item
      */
-    public ItemStack getResult() {
+    ItemStack getResult() {
         return result.clone();
     }
 

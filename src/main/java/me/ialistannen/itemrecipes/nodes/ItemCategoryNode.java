@@ -3,6 +3,7 @@ package me.ialistannen.itemrecipes.nodes;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 import org.bukkit.Material;
 
@@ -23,7 +24,7 @@ import me.ialistannen.itemrecipes.util.Util;
 /**
  * A {@link TreePaneNode}, that displays all items in an {@link ItemCategory}
  */
-public class ItemCategoryNode extends TreePaneNode {
+class ItemCategoryNode extends TreePaneNode {
 
     private ItemCategory category;
     private Dimension    size;
@@ -36,7 +37,7 @@ public class ItemCategoryNode extends TreePaneNode {
      * @param category The {@link ItemCategory}
      * @param size The size of the Pane
      */
-    public ItemCategoryNode(TreePaneNode parent, ItemCategory category, Dimension size) {
+    ItemCategoryNode(TreePaneNode parent, ItemCategory category, Dimension size) {
         super(parent);
         this.category = category;
         this.size = size;
@@ -45,7 +46,7 @@ public class ItemCategoryNode extends TreePaneNode {
     /**
      * @return The {@link ItemCategory}
      */
-    public ItemCategory getCategory() {
+    ItemCategory getCategory() {
         return category;
     }
 
@@ -61,7 +62,7 @@ public class ItemCategoryNode extends TreePaneNode {
 
             Button backButton = new Button(ItemFactory.builder(Material.BARRIER).setName("&c&lBack").build(), Dimension.ONE);
             backButton.setAction(clickEvent -> getOwner().ifPresent(treePane -> treePane.select(getParent())));
-            
+
             anchorPane.addComponent(backButton, x, y);
         });
 
@@ -73,7 +74,10 @@ public class ItemCategoryNode extends TreePaneNode {
 
         TreePane treePane = owner.get();
 
-        List<ItemRecipeNode> nodes = ItemRegistry.INSTANCE.getNodes(category);
+        List<ItemRecipeNode> nodes = ItemRegistry.INSTANCE.getNodes(category)
+                  .stream()
+                  .sorted((o1, o2) -> o1.getResult().getType().compareTo(o2.getResult().getType()))
+                  .collect(Collectors.toList());
         for (ItemRecipeNode node : nodes) {
             node.setParent(this);
 
